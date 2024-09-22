@@ -8,22 +8,20 @@ import upload from '../middleware/upload';
 
 const router = express.Router();
 
-// @route   POST api/recipients
-// @desc    Create a new recipient
-// @access  Private
-router.post('/create', authMiddleware, async (req: AuthRequest, res: Response) => {
+router.post('/create', authMiddleware, upload.single('headshot'), async (req: AuthRequest, res: Response) => {
   try {
     const { name, gender, age, preferredSizes } = req.body;
     const newRecipient = new Recipient({
       name,
       gender,
-      age,
-      preferredSizes,
-      user: req.user!.id
+      age: Number(age),
+      preferredSizes: JSON.parse(preferredSizes),
+      user: req.user!.id,
+      // picture: req.file ? `/uploads/${req.file.filename}` : null
     });
 
-    const recipient = await newRecipient.save();
-    res.json({ recipient: { id: recipient._id, name: recipient.name } });
+    const savedRecipient = await newRecipient.save();
+    res.json(savedRecipient);  // This should include the _id
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -147,9 +145,27 @@ router.post('/:id/picture', authMiddleware, upload.single('picture'), async (req
 // @route   PUT api/recipients/update/:id
 // @desc    Update a recipient by ID
 // @access  Private
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', authMiddleware, upload.single('headshot'), async (req: AuthRequest, res: Response) => {
   try {
-    const recipient = await Recipient.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { name, gender, age, preferredSizes } = req.body;
+    const updateData: any = {
+      name,
+      gender,
+      age: Number(age),
+      preferredSizes: JSON.parse(preferredSizes),
+    };
+
+    // // Only update the picture if a new file is uploaded
+    // if (req.file) {
+    //   updateData.picture = `/uploads/${req.file.filename}`;
+    // }
+
+    const recipient = await Recipient.findOneAndUpdate(
+      { _id: req.params.id, user: req.user!.id },
+      updateData,
+      { new: true }
+    );
+
     if (!recipient) {
       return res.status(404).json({ msg: 'Recipient not found' });
     }

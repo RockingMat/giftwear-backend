@@ -6,6 +6,7 @@ import connectDB from './config/database';
 import authRoutes from './routes/auth';
 import recipientRoutes from './routes/recipients';
 import airtableRoutes from './routes/airtable';
+import path from 'path';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);

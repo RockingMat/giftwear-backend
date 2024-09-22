@@ -18,9 +18,7 @@ const createSendToken = (user: any, statusCode: number, res: Response) => {
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     sameSite: 'strict' as const
   };
-  console.log('Login successful, setting cookie');
   res.cookie('jwt', token, cookieOptions);
-  console.log('Cookie set, sending response');
   // Remove password from output
   user.password = undefined;
 

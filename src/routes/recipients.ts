@@ -17,7 +17,6 @@ router.post('/create', authMiddleware, upload.single('headshot'), async (req: Au
       age: Number(age),
       preferredSizes: JSON.parse(preferredSizes),
       user: req.user!.id,
-      // picture: req.file ? `/uploads/${req.file.filename}` : null
     });
 
     const savedRecipient = await newRecipient.save();

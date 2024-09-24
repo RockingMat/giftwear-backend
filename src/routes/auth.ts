@@ -33,7 +33,6 @@ const createSendToken = (user: any, statusCode: number, res: Response) => {
 // @desc    Authenticate user & get token
 // @access  Public
 router.post('/login', async (req: Request, res: Response) => {
-  console.log('Login request received');
   try {
     const { email, password } = req.body;
     

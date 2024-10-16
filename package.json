@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@vercel/node": "^3.2.23",
     "airtable": "^0.12.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",

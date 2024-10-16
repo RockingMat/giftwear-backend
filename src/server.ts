@@ -6,6 +6,7 @@ import connectDB from './config/database';
 import authRoutes from './routes/auth';
 import recipientRoutes from './routes/recipients';
 import airtableRoutes from './routes/airtable';
+import emailRoutes from './routes/emails';
 import path from 'path';
 
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/recipients', recipientRoutes);
 app.use('/api/airtable', airtableRoutes);
+app.use('/api/emails', emailRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
